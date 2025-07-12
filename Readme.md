@@ -1,40 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>ML & Transformer Project</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 40px;
-      background: #f7f9fc;
-      color: #333;
-      line-height: 1.6;
-    }
-    h1 {
-      color: #2c3e50;
-    }
-    h2 {
-      color: #34495e;
-      margin-top: 30px;
-    }
-    ul {
-      margin-top: 10px;
-    }
-    code {
-      background: #ecf0f1;
-      padding: 2px 5px;
-      border-radius: 3px;
-    }
-    .section {
-      background: #ffffff;
-      padding: 20px;
-      border-radius: 10px;
-      margin-bottom: 20px;
-      box-shadow: 0px 0px 10px rgba(0,0,0,0.05);
-    }
-  </style>
-</head>
+<html>
+
 <body>
 
   <h1>Complete Machine Learning and Transformer Implementation</h1>

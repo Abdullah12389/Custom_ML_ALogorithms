@@ -1,5 +1,0 @@
-encode_input=Input(shape=(50,))
-decoder_input=Input(shape=(50,))
-encoder_ouput=Encoder_Layer(100,50,20,2000)(encode_input)
-decoder_output=Decoder_Layer(100,50,20,2000)(decoder_input,encoder_ouput)
-model=Model(inputs=[encode_input,decoder_input],outputs=decoder_output)
