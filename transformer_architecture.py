@@ -1,7 +1,7 @@
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Layer,Embedding,LayerNormalization,Dense,Input
+from tensorflow.keras import Model
 
 def softmax(arr):
     exp_arr=tf.math.exp(arr-tf.reduce_max(arr))
@@ -22,11 +22,11 @@ class Positional_Encoding(Layer):
 class MultiHeadAttention(Layer):
     def __init__(self,n_dim,no_of_heads,mask=False):
         super().__init__()
-        self.WQ=tf.convert_to_tensor(np.random.random((n_dim,n_dim)),dtype=tf.float32)
-        self.WK=tf.convert_to_tensor(np.random.random((n_dim,n_dim)),dtype=tf.float32)
-        self.WV=tf.convert_to_tensor(np.random.random((n_dim,n_dim)),dtype=tf.float32)
+        self.WQ=self.add_weight(shape=(n_dim,n_dim),initializer="random_normal",trainable=True)
+        self.WK=self.add_weight(shape=(n_dim,n_dim),initializer="random_normal",trainable=True)
+        self.WV=self.add_weight(shape=(n_dim,n_dim),initializer="random_normal",trainable=True)
         self.ndim=n_dim
-        self.mask=tf.convert_to_tensor(mask)
+        self.mask=mask
         self.no_of_heads=no_of_heads
     def call(self,q,k,v):
         #In this step we projected the embed of word to ndim equal to n_dim/no_of_heads the batches has dimention=batch_size,seqlen,no_of_heads,n_dim/no_of_heads as we have to divide between multiple heads
@@ -37,8 +37,8 @@ class MultiHeadAttention(Layer):
         V=tf.reshape(tf.matmul(v,self.WV),(batch_size,self.no_of_heads,seq_len,self.ndim//self.no_of_heads))
         S=softmax(tf.matmul(Q,tf.transpose(K,perm=[0,1,3,2]))/tf.sqrt(tf.constant(self.ndim//self.no_of_heads,dtype=tf.float32))) #batch_size,self.no_of_heads,seq_len,seq_len
         if self.mask:
-            mask_matrix=tf.convert_to_tensor(tf.linalg.band_part(tf.zeros(shape=(batch_size,self.no_of_heads,seq_len,seq_len)),-1,0))
-            S=S*tf.constant(1,dtype=tf.float32)-mask_matrix
+            mask_matrix=tf.linalg.band_part(tf.ones(shape=(1,1,seq_len,seq_len)),-1,0)
+            S=softmax(S-(1.0-mask_matrix)*-1e9)
         x=tf.transpose(tf.matmul(S,V),perm=[0,2,1,3]) #batch_size,self.no_of_heads,seq_len,self.ndim//self.no_of_heads (before transpose)
         return tf.reshape(x,(batch_size,seq_len,self.ndim))
 
